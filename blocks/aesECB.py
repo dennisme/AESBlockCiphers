@@ -17,5 +17,3 @@ class aesECB:
         self.key = key
         return self.key
         
-    def tits(self):
-        print 'fuck it'
