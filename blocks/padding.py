@@ -10,7 +10,7 @@ https://tools.ietf.org/html/rfc5652#section-6.3
 
 Note: if the data passed is over 16 bytes python cryptograpy will try to step
 it up and treat it like multiple blocks. It tries to do the work for you. 
-Bounds checking should be handled in the specific block program. 
+Bounds checking is needed to make sure my functions do the work. 
 '''
 class padData:
     '''
@@ -32,8 +32,10 @@ class padData:
         it and calls the python cryptograpy library function to implement
         PKC#7 padding. The padded string is returned. 
         '''
-        if (len(self.inputString) > 16):
-            raise ValueError('The size of the block can not be over 16 bytes')
+        # Note there is an error in the logic here. If a plaintext is passed
+        # that is exactly 16 bytes it pads it to 32 bytes
+        if (len(self.inputString) > 16 or len(self.inputString) == 0):
+            raise ValueError('The input can not be null or greater than 16')
         padder = padding.PKCS7(self.aesBits).padder()
         paddedData = padder.update(self.inputString)
         paddedData += padder.finalize()

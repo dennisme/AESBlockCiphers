@@ -22,5 +22,5 @@ class chunkData():
         algorithm. 
         '''
         self.chunkRaw = [self.rawStr[i:i+self.blockSize] 
-                for i in range (1, len(self.rawStr), self.blockSize)]
+                for i in range (0, len(self.rawStr), self.blockSize)]
         return self.chunkRaw
