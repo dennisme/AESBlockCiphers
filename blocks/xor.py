@@ -26,11 +26,8 @@ class xorData:
         '''
         stringOneToInt = int(binascii.hexlify(self.stringOne), 16)
         stringTwoToInt = int(binascii.hexlify(self.stringTwo), 16)
-        # converts the strong to an int
         xorString = bin(stringOneToInt ^ stringTwoToInt)
-        #takes the ints xors them and converts to binary
         stringResult = binascii.unhexlify('%x' % int(xorString, 2))
-        #returns the bin to int, then using binascii unhexlify to a byte object
         return stringResult
 
 

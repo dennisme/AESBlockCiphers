@@ -1,4 +1,4 @@
 #dev dependencies 
 cryptography
-pytest
 binascii
+nose

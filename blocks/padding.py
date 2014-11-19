@@ -18,23 +18,37 @@ class padData:
     It takes the AES bit size (128, 192, 256) and the string to be padded 
     and returns the string.
     '''
-    def __init__(self, aesBits, paddedStr):
+    def __init__(self, aesBits, inputString):
         '''
         This constructor initializes the variables to be used in the padString
         function. 
         '''
         self.aesBits = aesBits
-        self.paddedStr = paddedStr
+        self.inputString = inputString
 
     def padString(self):
         '''
         This padString constructor takes the aesBits and paddedStr passed to 
         it and calls the python cryptograpy library function to implement
-        PKC#7 padding. The padded string is retunred. 
+        PKC#7 padding. The padded string is returned. 
         '''
+        if (len(self.inputString) > 16):
+            raise ValueError('The size of the block can not be over 16 bytes')
         padder = padding.PKCS7(self.aesBits).padder()
-        paddedData = padder.update(self.paddedStr)
+        paddedData = padder.update(self.inputString)
         paddedData += padder.finalize()
         return paddedData 
 
+    def unPadString(self):
+        '''
+        This unPadString constructor takes the aesBits and paddedStr passed to 
+        it and calls the python cryptograpy library function to remove PKC#7
+        padding. The unpadded string is returned.
+        '''
+        if (len(self.inputString) > 16):
+            raise ValueError('The size of the block can not be over 16 bytes')
+        unpadder = padding.PKCS7(self.aesBits).unpadder()
+        unPaddedData = unpadder.update(self.inputString)
+        returnData = unPaddedData + unpadder.finalize()
+        return returnData
 
