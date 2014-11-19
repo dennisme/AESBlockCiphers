@@ -14,19 +14,15 @@ print type(iv)
 
 print "-----"
 padder = padding.PKCS7(192).padder()
-#data = '\x17\x04\x01\x18\x00\x16\x16\x16' 
-#data = b'\x17\x04\x01\x18\x00\x16\x16\x16\x17\x04\x01\x18\x00\x16\x16\x16' 
-#padded_data = padder.update(data)
-padded_data = padder.update(b"111111111112222222222222")
+padded_data = padder.update("1111111111112222222222222")
 print len(padded_data)
 print type(padded_data)
 print repr(padded_data)
-print "fuck it"
 padded_data += padder.finalize()
-#print padded_data
-#print type(padded_data)
-#print repr(padded_data)
-#print len(padded_data)
+print padded_data
+print type(padded_data)
+print repr(padded_data)
+print len(padded_data)
 
 print "----------------"
 print "starting encryption"
@@ -44,28 +40,16 @@ print "-----------"
 print "testing this one"
 decryptor = cipher.decryptor()
 pt = decryptor.update(ct) 
-# i + decryptor.finalize()
 print "-------------"
 pt = pt  + "\x16\x16"
-#the print does not like to include the x16 in the print. 
-print "here?"
 print repr(pt)
 print type(pt)
 print len(pt)
 print "end test"
 
 print "-----------"
-
 unpadder = padding.PKCS7(192).unpadder()
 uppt = unpadder.update(pt)
 print uppt
 print repr(uppt)
 print type(uppt)
-#the finalize() can be in one step
-#neet to test its restrictions?
-print "--------"
-#finalpt = uppt + unpadder.finalize()
-#print finalpt
-#print repr(finalpt)
-#print type(finalpt)
-#print len(finalpt)
