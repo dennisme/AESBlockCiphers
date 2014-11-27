@@ -5,6 +5,7 @@ from cryptography.hazmat.backends import default_backend
 from chunk import chunkData
 from padding import padData
 from xor import xorData
+import os
 
 class aesCBC:
     '''
