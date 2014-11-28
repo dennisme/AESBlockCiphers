@@ -98,9 +98,9 @@ class ECBMode:
     def decrypt(self, ciphertext):
         '''
         The decrypt constructor takes the ciphertext string, sends it to 
-        the postProcess class to be unpadded and chunked. The blocks are then
-        decrypted using the python cryptography library. Returns a ciphertext
-        string.
+        the postProcess class to be chunked. The blocks are then decrypted
+        and unpadded using the python cryptography library. Returns a 
+        ciphertext string.
         '''
         ciphertext = self.postProcess(ciphertext)
         backend = default_backend()
