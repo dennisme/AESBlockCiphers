@@ -45,7 +45,7 @@ class aesCBC:
    
     def preProcess(self, data):
         '''
-        //todo
+        //todo xor should happen here
         '''
         if (len(data) == ''):
             raise ValueError('Plaintext string can not be empty')
@@ -69,7 +69,7 @@ class aesCBC:
 
     def postProcess(self, data):
         '''
-        //todo
+        //todo xor should happen here
         '''
         if (len(data) == '' or len(data) < 16):
             raise ValueError('Invalid ciphertext byte lenght')
@@ -87,9 +87,10 @@ class aesCBC:
                 backend = backend)
         encryptor = cipher.encryptor()
         ciphertextList = []
-        for i in range(0, len(plaintext)):
+#        for i in range(0, len(plaintext)):
         #    //todo
         return ''.join(ciphertextList)
+
     def decrypt(self, ciphertext):
         '''
         //todo
