@@ -1,4 +1,11 @@
-__all__ = ['aesECB', 'aesCBC', 'aesCFB', 'aesOFB', 'aesCTR', 'padding', 'xor', 'chunk']
+__all__ = ['aesECB', 
+           'aesCBC',
+           'aesCFB', 
+           'aesOFB', 
+           'aesCTR', 
+           'padding', 
+           'xor', 
+           'chunk']
 
 from blocks import aesECB
 from blocks import aesCBC

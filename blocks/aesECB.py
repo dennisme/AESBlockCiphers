@@ -5,7 +5,7 @@ from cryptography.hazmat.backends import default_backend
 from chunk import chunkData
 from padding import padData
 
-class ECBMode:
+class ECBMode(object):
     '''
     This class is used to implement ECB mode using python cryptography. The
     chunkData and padData are custom classes that are used to build 
@@ -18,7 +18,17 @@ class ECBMode:
         decryption. The key can be 16, 24 or 32 bytes long.
         '''
         self.key = key
-   
+        
+    @property
+    def key(self):
+        return self._key
+
+    @key.setter
+    def key(self, key):
+        if (len(key) not in [16,24,32]):
+            raise Exception('The key must be 16, 24, or 32 bytes long.')
+        self._key = key
+
     def pad(self, data):
         '''
         This constructor takes in the string that needs to be padded. 
@@ -47,7 +57,7 @@ class ECBMode:
         needed. Returns a list. 
         '''
         if (data == ''):
-            raise ValueError('Plaintext string can not be empty')
+            raise ValueError('Plaintext string can not be empty.')
         elif (len(data) < 16):
             paddedList = [self.pad(data)]
             return paddedList
@@ -72,7 +82,7 @@ class ECBMode:
         ciphertext. Returns a list.  
         '''
         if (len(data) == '' or len(data) < 16):
-            raise ValueError('Invalid ciphertext byte length')
+            raise ValueError('Invalid ciphertext byte length.')
         else:
             chunk = chunkData(data)
             return chunk.getChunk()
@@ -90,6 +100,7 @@ class ECBMode:
                 backend = backend)
         encryptor = cipher.encryptor()
         ciphertextList = []
+        
         for i in range(0, len(plaintext)):
             ciphertext = encryptor.update(plaintext[i])
             ciphertextList.append(ciphertext)
@@ -108,6 +119,7 @@ class ECBMode:
                 backend = backend)
         decryptor = cipher.decryptor()
         plaintextList = []
+       
         if (len(ciphertext) == 1):
             plaintext = decryptor.update(ciphertext[0])
             unPaddedPt = self.unPad(plaintext)

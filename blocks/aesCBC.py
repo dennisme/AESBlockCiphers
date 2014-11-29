@@ -6,7 +6,7 @@ from chunk import chunkData
 from padding import padData
 from xor import xorData
 
-class aesCBC:
+class CBCMode(object):
     '''
     This class is used to implment CBC mode using python cryptography. The
     chunkData, padData, and xorData are custom classes that are used to build 
@@ -19,7 +19,27 @@ class aesCBC:
         and the IV should be the same length, either 16, 24, or 32 bytes long.
         '''
         self.key = key
-        self.IV = IV
+        self.iv = iv 
+
+    @property
+    def key(self):
+        return self._key
+
+    @key.setter
+    def key(self, key):
+        if (len(key) not in [16,24,32]):
+            raise Exception('The key must be 16, 24, or 32 bytes long.')
+        self._key = key
+    
+    @property
+    def iv(self):
+        return self._iv
+
+    @iv.setter
+    def iv(self, iv):
+        if (len(iv) != 16):
+            raise Exception('Initialization vector (IV) must be 16 bytes.')
+        self._iv = iv 
 
     def pad(self, data):
         '''
@@ -72,7 +92,7 @@ class aesCBC:
         //todo xor should happen here
         '''
         if (len(data) == '' or len(data) < 16):
-            raise ValueError('Invalid ciphertext byte lenght')
+            raise ValueError('Invalid ciphertext byte length.')
         else:
             chunk = chunkData(data)
             return chunk.getChunk()
@@ -82,13 +102,27 @@ class aesCBC:
         //todo
         '''
         plaintext = self.postProcess(plaintext)
-        backed = default_backend()
-        cipher = Cipher(algorithms.AES(self, key),modes.ECB(),
+        backend = default_backend()
+        cipher = Cipher(algorithms.AES(self.key),modes.ECB(),
                 backend = backend)
         encryptor = cipher.encryptor()
         ciphertextList = []
+        if (len(plaintext) == 1):
+            xor = xorData(self.iv, plaintext[0])
+            initialXor = xor.getXor()
+            firstElement = encryptor.update(initialXor)
+            return firstElement 
+        
+        for i in range(1, len(plaintext)):
+                if (plaintext[1]):
+                    preXor(ciphertextList[0], plaintext[1])
+                    secondElement = encryptor.update(preXor)
+                    ciphertextList.append(secondElement)
+        #idea was to xor the first element then encrypt add to the new list
+        #if plaintext len > 1 loop and encrypt 
+        startElement = xorData(plaintext[0],self.IV)
 #        for i in range(0, len(plaintext)):
-        #    //todo
+            
         return ''.join(ciphertextList)
 
     def decrypt(self, ciphertext):
@@ -97,7 +131,7 @@ class aesCBC:
         '''
         ciphertext = self.postProcess(ciphertext)
         backed = default_backend()
-        cipher = Cipher(algorithms.AES(self, key),modes.ECB(),
+        cipher = Cipher(algorithms.AES(self.key),modes.ECB(),
                 backend = backend)
         decryptor = cipher.decryptor()
         plaintextList = []

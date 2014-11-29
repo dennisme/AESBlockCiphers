@@ -1,2 +1,2 @@
-__all__ = ['test']
+__all__ = ['test_testPrimitives', 'test_ecb']
 
