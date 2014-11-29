@@ -6,6 +6,7 @@ from chunk import chunkData
 from padding import padData
 from xor import xorData
 
+
 class CBCMode(object):
     '''
     This class is used to implment CBC mode using python cryptography. The
@@ -67,9 +68,10 @@ class CBCMode(object):
    
     def preProcess(self, data):
         '''
-        //todo xor should happen here
+        The preProcess constructor takes the plaintext. Then pads and chunks if
+        needed. Returns a list.
         '''
-        if (len(data) == ''):
+        if (len(data) == 0):
             raise ValueError('Plaintext string can not be empty')
         elif (len(data) < 16):
             paddedList = [self.pad(data)]
@@ -91,9 +93,10 @@ class CBCMode(object):
 
     def postProcess(self, data):
         '''
-        //todo xor should happen here
+        The postProcess constructor is used to validate and chunk the
+        ciphertext. Returns a list.
         '''
-        if (len(data) == '' or len(data) < 16):
+        if (len(data) == 0 or len(data) < 16):
             raise ValueError('Invalid ciphertext byte length.')
         else:
             chunk = chunkData(data)
@@ -117,38 +120,17 @@ class CBCMode(object):
         initialXor = xor.getXor()
         firstElement = encryptor.update(initialXor)
         ciphertextList.append(firstElement)
-        
-        #Add the second element to the list. 
-#        getSecondXor = xorData(ciphertextList[0], plaintext[1])
-#        secondXor = getSecondXor.getXor() 
-
-        if (len(plaintext) == 1):
-            return ''.join(ciphertextList)
-        if (len(plaintext) >= 2):
-            xorx = xorData(ciphertextList[0], plaintext[1])
-            secondXor = xorx.getXor() 
-            return ''.join(ciphertextList) 
-        if (len(plaintext) >= 3):
-            for i in range(2, len(plaintext)):
-                return ciphertextList
-
-                 
-#        for i in range(0, len(plaintext)):
-        # if 1 just return the ciphertextList
-        #if 2 retrun cipherext list
-        # more than 2 loop and return
-        #idea was to xor the first element then encrypt add to the new list
-        #if plaintext len > 1 loop and encrypt 
-#        startElement = xorData(plaintext[0],self.IV)
-#        for i in range(0, len(plaintext)):
-            
+                
 #        return ''.join(ciphertextList)
 
     def decrypt(self, ciphertext):
         '''
         //todo
         '''
+        # Send the ciphertext string to be chunked
         ciphertext = self.postProcess(ciphertext)
+
+        # Initilize the python cryptography ECB mode 
         backed = default_backend()
         cipher = Cipher(algorithms.AES(self.key),modes.ECB(),
                 backend = backend)

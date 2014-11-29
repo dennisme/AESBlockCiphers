@@ -5,10 +5,11 @@ from cryptography.hazmat.backends import default_backend
 from chunk import chunkData
 from padding import padData
 
+
 class ECBMode(object):
     '''
     This class is used to implement ECB mode using python cryptography. The
-    chunkData and padData are custom classes that are used to build 
+    chunkData and padData are custom classes that are used to build
     functionality that python cryptography would normally handle in the
     backend. Educational purposes only.
     '''
@@ -18,21 +19,22 @@ class ECBMode(object):
         decryption. The key can be 16, 24 or 32 bytes long.
         '''
         self.key = key
-        
+
+    # Input validation for the key
     @property
     def key(self):
         return self._key
 
     @key.setter
     def key(self, key):
-        if (len(key) not in [16,24,32]):
+        if (len(key) not in [16, 24, 32]):
             raise Exception('The key must be 16, 24, or 32 bytes long.')
         self._key = key
 
     def pad(self, data):
         '''
-        This constructor takes in the string that needs to be padded. 
-        Calls the custom pad class in the block/padding.py and returns the 
+        This constructor takes in the string that needs to be padded.
+        Calls the custom pad class in the block/padding.py and returns the
         padded string.
         '''
         padding = padData(data)
@@ -41,8 +43,8 @@ class ECBMode(object):
 
     def unPad(self, data):
         '''
-        This constructor takes in the padded string that needs to be unpadded 
-        by the receiver of the message. 
+        This constructor takes in the padded string that needs to be unpadded
+        by the receiver of the message.
         '''
         try:
             unPadding = padData(data)
@@ -50,13 +52,13 @@ class ECBMode(object):
             return unPaddedData
         except ValueError:
             return data
-    
+
     def preProcess(self, data):
         '''
         The preProcess constructor takes the plaintext. Then pads and chunks if
-        needed. Returns a list. 
+        needed. Returns a list.
         '''
-        if (data == ''):
+        if (len(data) == 0):
             raise ValueError('Plaintext string can not be empty.')
         elif (len(data) < 16):
             paddedList = [self.pad(data)]
@@ -74,14 +76,14 @@ class ECBMode(object):
                 if (len(chunkedData[i]) < 16):
                     paddedChunk = self.pad(chunkedData.pop(i))
                     chunkedData.append(paddedChunk)
-            return chunkedData  
+            return chunkedData
 
     def postProcess(self, data):
         '''
-        The postProcess constructor is used to validate and chunk the 
-        ciphertext. Returns a list.  
+        The postProcess constructor is used to validate and chunk the
+        ciphertext. Returns a list.
         '''
-        if (len(data) == '' or len(data) < 16):
+        if (len(data) == 0 or len(data) < 16):
             raise ValueError('Invalid ciphertext byte length.')
         else:
             chunk = chunkData(data)
@@ -89,37 +91,45 @@ class ECBMode(object):
 
     def encrypt(self, plaintext):
         '''
-        The encrypt constructor takes the plaintext string, sends it to the 
-        preProcess class to be padded and chunked. The blocks are then 
+        The encrypt constructor takes the plaintext string, sends it to the
+        preProcess class to be padded and chunked. The blocks are then
         encrypted using the python cryptography library. Returns a ciphertext
         string.
         '''
+        # Send the plaintext string to be padded and chunked
         plaintext = self.preProcess(plaintext)
+        
+        # Initilize the python cryptography ECB mode
         backend = default_backend()
-        cipher = Cipher(algorithms.AES(self.key),modes.ECB(),
+        cipher = Cipher(algorithms.AES(self.key), modes.ECB(),
                 backend = backend)
         encryptor = cipher.encryptor()
-        ciphertextList = []
         
+        # Loop through and encrypt the plaintext list
+        ciphertextList = []
         for i in range(0, len(plaintext)):
             ciphertext = encryptor.update(plaintext[i])
             ciphertextList.append(ciphertext)
         return ''.join(ciphertextList)
-                    
+    
     def decrypt(self, ciphertext):
         '''
-        The decrypt constructor takes the ciphertext string, sends it to 
+        The decrypt constructor takes the ciphertext string, sends it to
         the postProcess class to be chunked. The blocks are then decrypted
-        and unpadded using the python cryptography library. Returns a 
+        and unpadded using the python cryptography library. Returns a
         ciphertext string.
         '''
+        # Send the ciphertext string to be chunked
         ciphertext = self.postProcess(ciphertext)
+        
+        # Initilize the python cryptography ECB mode
         backend = default_backend()
-        cipher = Cipher(algorithms.AES(self.key),modes.ECB(),
+        cipher = Cipher(algorithms.AES(self.key), modes.ECB(),
                 backend = backend)
         decryptor = cipher.decryptor()
+
+        # Loop through decrypt the ciphertext and then unpad.
         plaintextList = []
-       
         if (len(ciphertext) == 1):
             plaintext = decryptor.update(ciphertext[0])
             unPaddedPt = self.unPad(plaintext)
