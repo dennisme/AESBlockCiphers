@@ -20,7 +20,8 @@ class CBCMode(object):
         '''
         self.key = key
         self.iv = iv 
-
+   
+    # Input validation for the key
     @property
     def key(self):
         return self._key
@@ -30,7 +31,8 @@ class CBCMode(object):
         if (len(key) not in [16,24,32]):
             raise Exception('The key must be 16, 24, or 32 bytes long.')
         self._key = key
-    
+
+    # Input validation for the IV 
     @property
     def iv(self):
         return self._iv
@@ -101,29 +103,46 @@ class CBCMode(object):
         '''
         //todo
         '''
+        # Send the plaintext string to be padded and chunked 
         plaintext = self.postProcess(plaintext)
+       
+        # Initilize the python cryptography ECB mode
         backend = default_backend()
         cipher = Cipher(algorithms.AES(self.key),modes.ECB(),
                 backend = backend)
         encryptor = cipher.encryptor()
-        ciphertextList = []
-        if (len(plaintext) == 1):
-            xor = xorData(self.iv, plaintext[0])
-            initialXor = xor.getXor()
-            firstElement = encryptor.update(initialXor)
-            return firstElement 
         
-        for i in range(1, len(plaintext)):
-                if (plaintext[1]):
-                    preXor(ciphertextList[0], plaintext[1])
-                    secondElement = encryptor.update(preXor)
-                    ciphertextList.append(secondElement)
+        ciphertextList = []
+        xor = xorData(self.iv, plaintext[0])
+        initialXor = xor.getXor()
+        firstElement = encryptor.update(initialXor)
+        ciphertextList.append(firstElement)
+        
+        #Add the second element to the list. 
+#        getSecondXor = xorData(ciphertextList[0], plaintext[1])
+#        secondXor = getSecondXor.getXor() 
+
+        if (len(plaintext) == 1):
+            return ''.join(ciphertextList)
+        if (len(plaintext) >= 2):
+            xorx = xorData(ciphertextList[0], plaintext[1])
+            secondXor = xorx.getXor() 
+            return ''.join(ciphertextList) 
+        if (len(plaintext) >= 3):
+            for i in range(2, len(plaintext)):
+                return ciphertextList
+
+                 
+#        for i in range(0, len(plaintext)):
+        # if 1 just return the ciphertextList
+        #if 2 retrun cipherext list
+        # more than 2 loop and return
         #idea was to xor the first element then encrypt add to the new list
         #if plaintext len > 1 loop and encrypt 
-        startElement = xorData(plaintext[0],self.IV)
+#        startElement = xorData(plaintext[0],self.IV)
 #        for i in range(0, len(plaintext)):
             
-        return ''.join(ciphertextList)
+#        return ''.join(ciphertextList)
 
     def decrypt(self, ciphertext):
         '''
