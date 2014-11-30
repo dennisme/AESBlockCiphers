@@ -67,15 +67,13 @@ class ECBMode(object):
             dataList = [data]
             return dataList
         elif (len(data) % 16 == 0):
-            divList = [chunkData(data)]
-            return divList
+            divList = chunkData(data)
+            return divList.getChunk()
         else:
             chunk = chunkData(data)
             chunkedData = chunk.getChunk()
-            for i in range(0, len(chunkedData)):
-                if (len(chunkedData[i]) < 16):
-                    paddedChunk = self.pad(chunkedData.pop(i))
-                    chunkedData.append(paddedChunk)
+            shortBlock = self.pad(chunkedData.pop(-1))
+            chunkedData.append(shortBlock)
             return chunkedData
 
     def postProcess(self, data):

@@ -80,15 +80,13 @@ class CBCMode(object):
             dataList = [data]
             return dataList
         elif(len(data) % 16 == 0):
-            divList = [chunkData(data)]
-            return divList
+            divList = chunkData(data) 
+            return divList.getChunk()
         else:
             chunk = chunkData(data)
             chunkedData = chunk.getChunk()
-            for i in range(0, len(chunkedData)):
-                if (len(chunkedData[i]) < 16):
-                        paddedChunk = self.pad(chunkedData.pop(i))
-                        chunkedData.append(paddedChunk)
+            shortBlock = self.pad(chunkedData.pop(-1))
+            chunkedData.append(shortBlock)
             return chunkedData
 
     def postProcess(self, data):
@@ -111,6 +109,7 @@ class CBCMode(object):
         '''
         # Send the plaintext string to be padded and chunked
         plaintext = self.preProcess(plaintext)
+        return plaintext 
         # Initilize the python cryptography ECB mode
         backend = default_backend()
         cipher = Cipher(algorithms.AES(self.key), modes.ECB(),
@@ -123,11 +122,10 @@ class CBCMode(object):
         for i in range(0, len(plaintext)):
             if (i == 0):
                 xor = xorData(self.iv, plaintext[i])
-                initialXor = xor.getXor()
+                initialXor = xor.getXor() 
                 firstElement = encryptor.update(initialXor)
                 ciphertextList.append(firstElement)
             elif (i >= 1):
-                return ciphertextList[i-1]
                 xor = xorData(ciphertextList[i-1], plaintext[i])
                 nElementXor = xor.getXor()
                 nEncryption = encryptor.update(nElementXor)
