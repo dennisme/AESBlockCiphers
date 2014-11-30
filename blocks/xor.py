@@ -26,7 +26,7 @@ class xorData(object):
     @stringOne.setter
     def stringOne(self, stringOne):
         if (len(stringOne) == 0):
-            raise ValueError('String one cant not be empty')
+            raise ValueError('String one can not be empty')
         self._stringOne = stringOne
     
     @property
