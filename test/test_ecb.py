@@ -110,6 +110,12 @@ class ecbTestCase(unittest.TestCase):
         assert preProcessedData == returnedList
 
     def testPostProcess(self):
+        '''
+        Testing the postProcess function in blocks/aesCBC.py with a large
+        ciphertext.
+        Note: This test is repetitive and will be trimmed out once issue #9
+        is addressed.
+        '''
         key = '\x00' * 16
         test = ECBMode(key)
         postProcessData = test.postProcess(

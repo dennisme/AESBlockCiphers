@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import binascii 
 
-class xorData:
+class xorData(object):
     '''
     This class is used to xor two strings of equal length, and return the 
     result. Often the result is a byte object (\x17\x04\x01\x18\x00) which
@@ -17,6 +17,26 @@ class xorData:
         '''
         self.stringOne = stringOne
         self.stringTwo = stringTwo
+   
+    @property
+    def stringOne(self):
+        return self._stringOne
+   
+    @stringOne.setter
+    def stringOne(self, stringOne):
+        if (len(stringOne) == 0):
+            raise ValueError('String one can not be empty')
+        self._stringOne = stringOne
+
+    @property
+    def stringTwo(self):
+        return self._stringTwo
+   
+    @stringTwo.setter
+    def stringTwo(self, stringTwo):
+        if (len(stringTwo) == 0):
+            raise ValueError('String two can not be empty')
+        self._stringTwo = stringTwo
 
     def getXor(self):
         '''

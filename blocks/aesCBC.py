@@ -10,8 +10,8 @@ from xor import xorData
 class CBCMode(object):
     '''
     This class is used to implment CBC mode using python cryptography. The
-    chunkData, padData, and xorData are custom classes that are used to build 
-    functionality that python cryptography would normally handle in the 
+    chunkData, padData, and xorData are custom classes that are used to build
+    functionality that python cryptography would normally handle in the
     backend. Educational purposes only.
     '''
     def __init__(self, key, iv):
@@ -20,8 +20,8 @@ class CBCMode(object):
         and the IV should be the same length, either 16, 24, or 32 bytes long.
         '''
         self.key = key
-        self.iv = iv 
-   
+        self.iv = iv
+
     # Input validation for the key
     @property
     def key(self):
@@ -29,11 +29,11 @@ class CBCMode(object):
 
     @key.setter
     def key(self, key):
-        if (len(key) not in [16,24,32]):
+        if (len(key) not in [16, 24, 32]):
             raise Exception('The key must be 16, 24, or 32 bytes long.')
         self._key = key
 
-    # Input validation for the IV 
+    # Input validation for the IV
     @property
     def iv(self):
         return self._iv
@@ -42,12 +42,12 @@ class CBCMode(object):
     def iv(self, iv):
         if (len(iv) != 16):
             raise Exception('Initialization vector (IV) must be 16 bytes.')
-        self._iv = iv 
+        self._iv = iv
 
     def pad(self, data):
         '''
-        This constructor takes in the string that needs to be padded. 
-        Calls the custom pad class in the block/padding.py and returns the 
+        This constructor takes in the string that needs to be padded.
+        Calls the custom pad class in the block/padding.py and returns the
         pdded string.
         '''
         padding = padData(data)
@@ -65,7 +65,7 @@ class CBCMode(object):
             return unPaddedData
         except ValueError:
             return data
-   
+
     def preProcess(self, data):
         '''
         The preProcess constructor takes the plaintext. Then pads and chunks if
@@ -85,7 +85,7 @@ class CBCMode(object):
         else:
             chunk = chunkData(data)
             chunkedData = chunk.getChunk()
-            for i in range (0, len(chunkedData)):
+            for i in range(0, len(chunkedData)):
                 if (len(chunkedData[i]) < 16):
                         paddedChunk = self.pad(chunkedData.pop(i))
                         chunkedData.append(paddedChunk)
@@ -101,39 +101,69 @@ class CBCMode(object):
         else:
             chunk = chunkData(data)
             return chunk.getChunk()
-    
+
     def encrypt(self, plaintext):
         '''
-        //todo
+        This encrypt constructor takes the plaintext string, sends it to the
+        preProcess class to be padded and chunked. The blocks are then
+        encrypted using python cryptography library ECB mode. The chaining
+        of ciphertexts is done manually.
         '''
-        # Send the plaintext string to be padded and chunked 
-        plaintext = self.postProcess(plaintext)
-       
+        # Send the plaintext string to be padded and chunked
+        plaintext = self.preProcess(plaintext)
         # Initilize the python cryptography ECB mode
         backend = default_backend()
-        cipher = Cipher(algorithms.AES(self.key),modes.ECB(),
+        cipher = Cipher(algorithms.AES(self.key), modes.ECB(),
                 backend = backend)
         encryptor = cipher.encryptor()
         
+        # Loop through the elements, special treatment for block 1
+        # https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation
         ciphertextList = []
-        xor = xorData(self.iv, plaintext[0])
-        initialXor = xor.getXor()
-        firstElement = encryptor.update(initialXor)
-        ciphertextList.append(firstElement)
-                
-#        return ''.join(ciphertextList)
+        for i in range(0, len(plaintext)):
+            if (i == 0):
+                xor = xorData(self.iv, plaintext[i])
+                initialXor = xor.getXor()
+                firstElement = encryptor.update(initialXor)
+                ciphertextList.append(firstElement)
+            elif (i >= 1):
+                return ciphertextList[i-1]
+                xor = xorData(ciphertextList[i-1], plaintext[i])
+                nElementXor = xor.getXor()
+                nEncryption = encryptor.update(nElementXor)
+                ciphertextList.append(nEncryption)
+        return ''.join(ciphertextList)
 
     def decrypt(self, ciphertext):
         '''
-        //todo
+        This decrypt constructor takes the plantext string, sends it to the
+        postProcess class to be chunked. The blocks are sent to the python
+        cryptography ECB mode for decryption. The first block is tehn xored
+        with the IV. The remaining blocks are xored with the previous
+        ciphertext in the list. The last element in the plaintextList is
+        then unpadded.
         '''
         # Send the ciphertext string to be chunked
         ciphertext = self.postProcess(ciphertext)
-
-        # Initilize the python cryptography ECB mode 
-        backed = default_backend()
-        cipher = Cipher(algorithms.AES(self.key),modes.ECB(),
+        # Initilize the python cryptography ECB mode
+        backend = default_backend()
+        cipher = Cipher(algorithms.AES(self.key), modes.ECB(),
                 backend = backend)
         decryptor = cipher.decryptor()
+        
+        # Loop through the ciphertext list, special treatment for block 1
         plaintextList = []
-        #//todo         
+        for i in range(0, len(ciphertext)):
+            if (i == 0):
+                firstElement = decryptor.update(ciphertext[i])
+                xor = xorData(self.iv, firstElement)
+                firstPlaintext = xor.getXor()
+                plaintextList.append(firstPlaintext)
+            elif (i >= 1):
+                nElement = decryptor.update(ciphertext[i])
+                xor = xorData(ciphertext[i-1], nElement)
+                nPlaintext = xor.getXor()
+                plaintextList.append(nPlaintext)
+        paddedElement = self.unPad(plaintextList.pop(-1))
+        plaintextList.append(paddedElement)
+        return ''.join(plaintextList)
