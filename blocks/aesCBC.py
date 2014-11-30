@@ -80,7 +80,7 @@ class CBCMode(object):
             dataList = [data]
             return dataList
         elif(len(data) % 16 == 0):
-            divList = chunkData(data) 
+            divList = chunkData(data)
             return divList.getChunk()
         else:
             chunk = chunkData(data)
@@ -109,7 +109,7 @@ class CBCMode(object):
         '''
         # Send the plaintext string to be padded and chunked
         plaintext = self.preProcess(plaintext)
-        
+
         # Initilize the python cryptography ECB mode
         backend = default_backend()
         cipher = Cipher(algorithms.AES(self.key), modes.ECB(),
@@ -143,6 +143,7 @@ class CBCMode(object):
         '''
         # Send the ciphertext string to be chunked
         ciphertext = self.postProcess(ciphertext)
+        
         # Initilize the python cryptography ECB mode
         backend = default_backend()
         cipher = Cipher(algorithms.AES(self.key), modes.ECB(),

@@ -3,6 +3,7 @@
 import unittest
 from blocks.aesECB import ECBMode
 
+
 class ecbTestCase(unittest.TestCase):
     '''
     This class is used to test the blocks/aesECB.py class. When the code is
