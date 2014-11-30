@@ -109,7 +109,7 @@ class CBCMode(object):
         '''
         # Send the plaintext string to be padded and chunked
         plaintext = self.preProcess(plaintext)
-        return plaintext 
+        
         # Initilize the python cryptography ECB mode
         backend = default_backend()
         cipher = Cipher(algorithms.AES(self.key), modes.ECB(),
