@@ -6,7 +6,7 @@ from blocks.aesOFB import OFBMode
 
 class cbcTestCase(unittest.TestCase):
     '''
-    This class is used to test the blocks/aesCBC.py class. When the code is
+    This class is used to test the blocks/aesOFB.py class. When the code is
     pushed to the 'develop' branch on github, the test files are run with
     TravisCI. The project can be view at:
     https://travis-ci.org/dennisme/AESBlockCiphers
