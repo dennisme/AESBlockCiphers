@@ -105,7 +105,7 @@ class OFBMode(object):
         This encrypt constructor takes the plaintext string, sends it to the
         preProcess class to be padded and chunked. The blocks are then
         encrypted using python cryptography library ECB mode.
-        //todo
+        Note: OFB does not normally use padding. See issue #12.
         '''
         # Send the plaintext string to be padded and chunked
         plaintext = self.preProcess(plaintext)
