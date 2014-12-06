@@ -10,13 +10,13 @@ class cbcTestCase(unittest.TestCase):
     pushed to the 'develop' branch on github, the test files are run with
     TravisCI. The project can be view at:
     https://travis-ci.org/dennisme/AESBlockCiphers
-    Note: Test cases use a static IV. 
+    Note: Test cases use a static IV.
     '''
     def testSmallString(self):
         '''
         Testing blocks/aesCBC.py for a small string of information < 16 bytes.
         '''
-        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f' 
+        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
         test = CBCMode(key, IV)
         ciphertext = test.encrypt('small string')
@@ -29,7 +29,7 @@ class cbcTestCase(unittest.TestCase):
         '''
         Testing blocks/aesCBC.py with a string that is 16 bytes in length.
         '''
-        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f' 
+        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
         testString = '1111111111111111'
         test = CBCMode(key, IV)
@@ -43,7 +43,7 @@ class cbcTestCase(unittest.TestCase):
         '''
         Testing blocks/aesCBC.py with a large string greater than 16 bytes.
         '''
-        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f' 
+        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
         testString = (
                 'This is another example of a message that would be over 16'
@@ -63,9 +63,9 @@ class cbcTestCase(unittest.TestCase):
 
     def testVeryLargeData(self):
         '''
-        Testing blocks/aesECB.py with a very large string of data.
+        Testing blocks/aesOFB.py with a very large string of data.
         '''
-        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f' 
+        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
         testString = ('This is a super secret message that just happens to'
                       ' be very long as well. I hope there is not a charlie'
@@ -91,13 +91,13 @@ class cbcTestCase(unittest.TestCase):
 
     def testPreProcess(self):
         '''
-        Testing the preProcess function in blocks/aesCBC.py with a large 
+        Testing the preProcess function in blocks/aesCBC.py with a large
         string. If the string is multiple of the block size then the last item
         will not contain padding.
         Note: This test is repetitive and will be trimmed out once issue #9
         is addressed.
         '''
-        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f' 
+        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
         test = CBCMode(key, IV)
         preProcessedData = test.preProcess(
@@ -105,17 +105,17 @@ class cbcTestCase(unittest.TestCase):
                 ' elements. The element that is not 16 bytes gets sent'
                 ' to the padding function and then appended to the list')
         returnedList = [
-                'This data should', 
-                ' be split into a', 
-                ' list with 16 by', 
-                'te elements. The', 
-                ' element that is', 
-                ' not 16 bytes ge', 
-                'ts sent to the p', 
-                'adding function ', 
-                'and then appende', 
-                'd to the list\x03\x03\x03'] 
-        #Loop through the list, making sure each element is 16 bytes
+                'This data should',
+                ' be split into a',
+                ' list with 16 by',
+                'te elements. The',
+                ' element that is',
+                ' not 16 bytes ge',
+                'ts sent to the p',
+                'adding function ',
+                'and then appende',
+                'd to the list\x03\x03\x03']
+        # Loop through the list, making sure each element is 16 bytes
         for i in range(0, len(returnedList)):
             assert len(returnedList[i]) == 16
         assert preProcessedData == returnedList
@@ -123,11 +123,11 @@ class cbcTestCase(unittest.TestCase):
     def testPostProcess(self):
         '''
         Testing the postProcess function in blocks/aesCBC.py with a large
-        ciphertext. 
+        ciphertext.
         Note: This test is repetitive and will be trimmed out once issue #9
         is addressed.
         '''
-        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f' 
+        IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
         test = CBCMode(key, IV)
         postProcessData = test.postProcess(
@@ -137,13 +137,13 @@ class cbcTestCase(unittest.TestCase):
                 "\xf9(\xe7\xa6\xd6\x17\\\xb4[x\xbc'Be\x10\x16\xac\xf2\x81S"
                 '\x05{\x04\xc8tkN\xc4ON\xb7\t\xcaA')
         returnedList = [
-                'x\xf5\xf8\xa8-\x99\xd4\x84\xc2\x94\xd09\x16\xe5\t\x96', 
-                '\xde\xe0\xb4o~\x17)\xb1\x86:\xef\xc4\xbc:n\xb0', 
-                '\xe0K1^\x1cPA\x89\xc2\xdfr(lZ&\xd4', 
-                '\x15U\xc0\xd3\xfb\xb7\x18\xb1e\xdd\xe9\x84<w\xf9(', 
-                "\xe7\xa6\xd6\x17\\\xb4[x\xbc'Be\x10\x16\xac\xf2", 
+                'x\xf5\xf8\xa8-\x99\xd4\x84\xc2\x94\xd09\x16\xe5\t\x96',
+                '\xde\xe0\xb4o~\x17)\xb1\x86:\xef\xc4\xbc:n\xb0',
+                '\xe0K1^\x1cPA\x89\xc2\xdfr(lZ&\xd4',
+                '\x15U\xc0\xd3\xfb\xb7\x18\xb1e\xdd\xe9\x84<w\xf9(',
+                "\xe7\xa6\xd6\x17\\\xb4[x\xbc'Be\x10\x16\xac\xf2",
                 '\x81S\x05{\x04\xc8tkN\xc4ON\xb7\t\xcaA']
-        #Loop through the list, making sure each element is 16 bytes
+        # Loop through the list, making sure each element is 16 bytes
         for i in range(0, len(returnedList)):
             assert len(returnedList[i]) == 16
-        assert postProcessData == returnedList    
+        assert postProcessData == returnedList
