@@ -41,7 +41,8 @@ class xorData(object):
 
     def getXor(self):
         '''
-        //redo
+        Take the two strings, loops through them xoring them a byte at a time.
+        returns a string.
         '''
         xorString = ''.join(chr(ord(c) ^ ord(k)) for c, k in izip(
             self.stringOne, cycle(self.stringTwo)))

@@ -139,7 +139,7 @@ class CTRMode(object):
 
     def decrypt(self, ciphertext):
         '''
-        This decrypt constructor takes the plantext string, sends it to the
+        This decrypt constructor takes the ciphertext string, sends it to the
         postProcess class to be chunked. The blocks are sent to the python
         cryptography ECB mode for encryption. In CTR, the decryption of the
         blocks uses the encryption of the IV + counter and the key, xored with the

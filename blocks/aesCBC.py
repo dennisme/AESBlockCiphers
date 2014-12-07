@@ -134,7 +134,7 @@ class CBCMode(object):
 
     def decrypt(self, ciphertext):
         '''
-        This decrypt constructor takes the plantext string, sends it to the
+        This decrypt constructor takes the ciphertext string, sends it to the
         postProcess class to be chunked. The blocks are sent to the python
         cryptography ECB mode for decryption. The first block is then xored
         with the IV. The remaining blocks are xored with the previous
