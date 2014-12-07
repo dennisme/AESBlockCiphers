@@ -6,8 +6,8 @@ AESBlockCiphers
 <a href='https://travis-ci.org/sebdah/git-pylint-commit-hook'><img src='https://travis-ci.org/dennisme/AESBlockCiphers.svg?branch=develop'></a>
 
 Personal project using python cryptography to implement ECB, CBC, CFB, OFB
-and CTR. The base encryption in all the files is ECB.I have written the code
-for the specific block opertion. Educational purposes only.
+and CTR. The base encryption in all the files is ECB. I have written the 
+for the specific block operation. Educational purposes only.
 
 ###Installation:
 
