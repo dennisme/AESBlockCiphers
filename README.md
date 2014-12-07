@@ -1,57 +1,45 @@
 AESBlockCiphers
 =========
 
+**As this project sits now it is not completed** 
+
 <a href='https://travis-ci.org/sebdah/git-pylint-commit-hook'><img src='https://travis-ci.org/dennisme/AESBlockCiphers.svg?branch=develop'></a>
 
-Personal project using AES to implement ECB, CBC, CFB, OFB, CTR. For educational 
-purposes only. 
+Personal project using python cryptography to implement ECB, CBC, CFB, OFB
+and CTR. The base encryption in all the files is ECB.I have written the code
+for the specific block opertion. Educational purposes only.
 
-To run the program simply unzip the file and run 'pip install -r
-requirements.txt' 
+###Installation:
 
-Once in the AESBlockCiphers/ directory the test files can be run using the 
-command 'nosetests test/test.py'
+Note: setup.py coming soon.
 
-To make the scripts executable simply use 'chmod u+x script.py'
+'''bash
+pip install -r requiremnts.txt
+'''
 
-Directory Info:
-=========
+###Testing
 
-blocks/ - contains block cipher and common modules. 
-test/ - contains test code for the working modules in block/ 
-extras/ - contains a small test script for proof on concept
-requirements.txt - used for tracking dependencies
-LICENSE.md - licensing purposes 
-README.md - used for readme on github
-template.py - will be used to test all block modes by importing blocks/
+'''python
+nosetest test/test_ecb.py
+'''
 
-Info:
-=========
-I have completed all functions that I will need to complete the modes, with
-the exception for the shift register logic and pre computation of the count.
+'''python 
+nosetests -vv test/test_*
+'''
 
+###Directory Info:
 
-**As this project sits now it is not completed** 
-TODO list:
-=========
+- blocks - contains block cipher and common modules. 
+- test - contains test code for the working modules in block/ 
+- requirements.txt - used for tracking dependencies
+- LICENSE.md - licensing purposes 
+- README.md - used for readme on github
 
--Fix errors caused by a plaintext of exactly 16 bytes being sent to block/padding.py
--Finish creating the interface for ECB, CBC, CFB, OFB, CTR
--Write test cases for the main modes in a seperate test file under test/
--Write basic template files for using the library
--Error handeling with padding, chunking, and xor
--Run tests on functions for timing
--Report info in graph form
--Write final report
+###TODO list:
 
-
-Note: 
-=========
-
-I have spent a great deal of time turning this code into a library 
-that can easily be imported and used by anyone. I could have just used functiong
-and passed data. But I felt this would be more extendaby and practical. I feel
-that I can complete the project before the end of the semester.
-
+- Write basic template files for using the library
+- Run tests on functions for timing
+- Report info in graph form
+- Fix issues
 
 

@@ -19,7 +19,7 @@ class ecbTestCase(unittest.TestCase):
         test = ECBMode(key)
         ciphertext = test.encrypt('small string')
         plaintext = test.decrypt(ciphertext)
-        assert ciphertext == '\xa6\xfe8\xec/\xf9\x123\x8e\xc5-T$\xd8x\xe4' 
+        assert ciphertext == '\xa6\xfe8\xec/\xf9\x123\x8e\xc5-T$\xd8x\xe4'
         assert plaintext == 'small string'
 
     def testEvenBlockString(self):
@@ -32,7 +32,8 @@ class ecbTestCase(unittest.TestCase):
         ciphertext = test.encrypt(testString)
         plaintext = test.decrypt(ciphertext)
         assert len(testString) == 16
-        assert ciphertext == '\xb6\xdeT\xf9\xa7\x867\xd1\xebR<\xa7 \x15\x89\xf4'
+        assert ciphertext == ('\xb6\xdeT\xf9\xa7\x867\xd1\xebR<\xa7 \x15'
+                              '\x89\xf4')
         assert plaintext == '1111111111111111'
 
     def testLargeString(self):
@@ -84,7 +85,7 @@ class ecbTestCase(unittest.TestCase):
 
     def testPreProcess(self):
         '''
-        Testing the preProcess function in blocks/aesECB.py with a large 
+        Testing the preProcess function in blocks/aesECB.py with a large
         string. If the string is multiple of the block size then the last item
         will not contain padding.
         '''
@@ -95,17 +96,17 @@ class ecbTestCase(unittest.TestCase):
                 ' elements. The element that is not 16 bytes gets sent'
                 ' to the padding function and then appended to the list')
         returnedList = [
-                'This data should', 
-                ' be split into a', 
-                ' list with 16 by', 
-                'te elements. The', 
-                ' element that is', 
-                ' not 16 bytes ge', 
-                'ts sent to the p', 
-                'adding function ', 
-                'and then appende', 
-                'd to the list\x03\x03\x03'] 
-        #Loop through the list, making sure each element is 16 bytes
+                'This data should',
+                ' be split into a',
+                ' list with 16 by',
+                'te elements. The',
+                ' element that is',
+                ' not 16 bytes ge',
+                'ts sent to the p',
+                'adding function ',
+                'and then appende',
+                'd to the list\x03\x03\x03']
+        # Loop through the list, making sure each element is 16 bytes
         for i in range(0, len(returnedList)):
             assert len(returnedList[i]) == 16
         assert preProcessedData == returnedList
@@ -124,11 +125,11 @@ class ecbTestCase(unittest.TestCase):
                 '\xa20c\xbbw\nJa2\x8d\xd3\x00\xb7`I\x1ce\xf6*\xd6bf\xa8\x94'
                 '\xb7\x89\xd5)\x07\xb5\x8b\x14\xc5A\xa5\xf5Z\xb0\xc3\xa6\xac0')
         returnedList = [
-                'D_\x04gF\x19\xd7\x9a\x91\xc3\x05ub\x03\xbf\x0f', 
-                '\xa8\r\n%$}\xa20c\xbbw\nJa2\x8d', 
-                '\xd3\x00\xb7`I\x1ce\xf6*\xd6bf\xa8\x94\xb7\x89', 
+                'D_\x04gF\x19\xd7\x9a\x91\xc3\x05ub\x03\xbf\x0f',
+                '\xa8\r\n%$}\xa20c\xbbw\nJa2\x8d',
+                '\xd3\x00\xb7`I\x1ce\xf6*\xd6bf\xa8\x94\xb7\x89',
                 '\xd5)\x07\xb5\x8b\x14\xc5A\xa5\xf5Z\xb0\xc3\xa6\xac0']
-        #Loop through the list, making sure each element is 16 bytes
+        # Loop through the list, making sure each element is 16 bytes
         for i in range(0, len(returnedList)):
             assert len(returnedList[i]) == 16
-        assert postProcessData == returnedList    
+        assert postProcessData == returnedList

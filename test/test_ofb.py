@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import unittest
-from blocks.aesCBC import CBCMode
+from blocks.aesOFB import OFBMode
 
 
-class cbcTestCase(unittest.TestCase):
+class ofbTestCase(unittest.TestCase):
     '''
-    This class is used to test the blocks/aesCBC.py class. When the code is
+    This class is used to test the blocks/aesOFB.py class. When the code is
     pushed to the 'develop' branch on github, the test files are run with
     TravisCI. The project can be view at:
     https://travis-ci.org/dennisme/AESBlockCiphers
@@ -14,34 +14,34 @@ class cbcTestCase(unittest.TestCase):
     '''
     def testSmallString(self):
         '''
-        Testing blocks/aesCBC.py for a small string of information < 16 bytes.
+        Testing blocks/aesOFB.py for a small string of information < 16 bytes.
         '''
         IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
-        test = CBCMode(key, IV)
+        test = OFBMode(key, IV)
         ciphertext = test.encrypt('small string')
         plaintext = test.decrypt(ciphertext)
-        assert ciphertext == ('\x1aUe\xc72\xa9\x04\xed\xb5\x1b\xfe\xa6\xdd'
-                              '\xbb\xdb\x19')
+        assert ciphertext == 'F\x89\xe5n~J\x88\xdbS\xa3\x94Z\x1f\x90=\x8b'
         assert plaintext == 'small string'
 
     def testEvenBlockString(self):
         '''
-        Testing blocks/aesCBC.py with a string that is 16 bytes in length.
+        Testing blocks/aesOFB.py with a string that is 16 bytes in length.
         '''
         IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
         testString = '1111111111111111'
-        test = CBCMode(key, IV)
+        test = OFBMode(key, IV)
         ciphertext = test.encrypt(testString)
         plaintext = test.decrypt(ciphertext)
         assert len(testString) == 16
-        assert ciphertext == '\xd6\xdc\xd3\xbc9\x88\xdfz\x9e1l+Q\n\x18\xc3'
+        assert ciphertext == (
+                '\x04\xd5\xb53#[\xca\x9e\x10\xfb\xcb\x0c*\xa5\x08\xbe')
         assert plaintext == '1111111111111111'
 
     def testLargeString(self):
         '''
-        Testing blocks/aesCBC.py with a large string greater than 16 bytes.
+        Testing blocks/aesOFB.py with a large string greater than 16 bytes.
         '''
         IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
@@ -49,13 +49,12 @@ class cbcTestCase(unittest.TestCase):
                 'This is another example of a message that would be over 16'
                 ' bytes in length. Cool stuff.')
         returnedCiphertext = (
-                'x\xc8S`\xb1\xa8V\xf9^\xf9\x12\xcb\xc2\x96\xb2\xdd\xe8\xabF'
-                "\xd77.\xb4\xa8\x9d\xd5\xd7\x1b\xc9y'\xa4\xa5\xb7K\xd9:\xba"
-                '\x89\x9a\x03x*\xc0\x08\x93L\xe1q#\xdeQ\x01\xc9\xe2\x9e\xa9'
-                '\xcb*C\xfdX\x12\x88\xd9\x859w\xbd\xed\x94\xa7h\x8b\x86\x17'
-                '\x11G\x8e\xcf\xa2\x9c\x0e\x0b\xdb0\x9e\r\xa5\xd8\xda[{\xfe'
-                '\xb7\xc8')
-        test = CBCMode(key, IV)
+                'a\x8c\xedq2\x03\x88\x8f@\xa4\x95Is\xf1K\xaf8\xe0P\xed7\xab'
+                "\x1b\x0eb\x88}\xff\xbf\x18+\x86CMtt\x15\xff{l'\xc9u\xacv\x8f"
+                '\x8e%&\x1cc\x11s\xc0\xf4\x05)\xa4\xee\xbf\xe3\x98\xca\xe5.'
+                '\x81\xeb\x01\xec\xf1^\x15\x8c\xadX6\xd2\xd3\x93d\xdf!\xf77'
+                '\xceN\xfe\xba\x12\xb26\xae\xf2\x10\xdd=')
+        test = OFBMode(key, IV)
         ciphertext = test.encrypt(testString)
         plaintext = test.decrypt(ciphertext)
         assert ciphertext == returnedCiphertext
@@ -67,22 +66,23 @@ class cbcTestCase(unittest.TestCase):
         '''
         IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
-        testString = ('This is a super secret message that just happens to'
-                      ' be very long as well. I hope there is not a charlie'
-                      ' sniffing data from the wire. Hopefully Alice and Bob'
-                      ' move to a better block mode')
+        testString = (
+                'This is a super secret message that just happens to'
+                ' be very long as well. I hope there is not a charlie'
+                ' sniffing data from the wire. Hopefully Alice and Bob'
+                ' move to a better block mode')
         returnedCiphertext = (
-                '{\xc9\xd3\x98\xb7\x92\x9at\x9f\x9a\xf8\xe3\xee\x8a\xa1f\xdc'
-                '\x90\x8f;\x1bGQ0\x89\xb9\xf7\xbbO<\t\xd4Y\x86S4>_\xbd0d=\r0'
-                '\x89\xa85d1\x13\xc4\xcb\xeb\x81\x8b\xb9~\x12\x0c\xc6\xbdhH.^'
-                '\xed\xb7\x84 a:\x05-)\x98\tZ\xd9\xc2\xef\x0f\xa3\x9c#u\xb5'
-                '\x0e_\x06\xc1\xf6\xf3y\x95\xbfx\xa1\x84T\xc2\xc2\xb4>\x88'
-                '\xa6Mp\xc2\'\x12\xfbSt\x0fM\xe9>\xaa\xc1\xd24t\x99\xfa\xe0'
-                '\xf7\x1d\x7f\x92=\xc0\x7f\x0f\xd8\xf4P\x07aB\xbf\xfaK'
-                '\x80ma"sS\x91\xa3\xed5,\xc7\xf0\x01\xd86\xba\x955\x16\xe9'
-                '\xc9\x04\xaau\x80rQ!\x1f\x92\xf2\xc4\x15\xc1\x8fT\xa0v\x83j'
-                '\tg\xd4\xe9\x9e$\x87\x11\xf6')
-        test = CBCMode(key, IV)
+                'a\x8c\xedq2\x03\x88\x8f@\xea\x89Hk\xf1K\xaf.\xfdR\xf2"\xb3^Ch'
+                '\x9d.\xff\xf8\x10n\x81XMg1_\xfe`ys\x81c\xb3s\x86\x84vd\r,^g'
+                '\xc0\xa6S}\xe0\xb7\xfd\xf6\x83\xc1\xf1.\x89\xf6\x01\xf7\xf1'
+                "\\\x1e\xd6\xe5?6\xf9\xd3\x8cm\xdf&\xeb\'\xdaM\xf0\xdah\x9bQ"
+                '\xc8\x8f9\xb5\x146}{\x14\xd0\x98r(\xd6\xe8\x8b0\xdf\xd5$qK'
+                '\x1a\xb2\x8b\xed\x0c:\x0e\xb6uy\xb9\xb3]P+\xc4\x14\x05\xce'
+                '\x1c3\xa0\xe6[\x94\xdc\x8b\n~\x89\x85\x86\xc2\x035\xf8\xf4'
+                '\x91!\xe7\xeb\x12\x91\xc6\xe2\x91yo\x11\xdd\xa8\xfdYZ\x99'
+                '\x17\x99\xf5\xf6\xce\x1f\x14$\xf0\x1b\xb2e\xb8\x91\x8a\xc9'
+                '\xaai<^\xa3P\xa7\x0c')
+        test = OFBMode(key, IV)
         ciphertext = test.encrypt(testString)
         plaintext = test.decrypt(returnedCiphertext)
         assert (len(ciphertext) % 16) == 0
@@ -91,15 +91,15 @@ class cbcTestCase(unittest.TestCase):
 
     def testPreProcess(self):
         '''
-        Testing the preProcess function in blocks/aesCBC.py with a large
+        Testing the preProcess function in blocks/aesOFB.py with a large
         string. If the string is multiple of the block size then the last item
         will not contain padding.
         Note: This test is repetitive and will be trimmed out once issue #9
-        is addressed.
+        is addressed. This would also be removed once issue #12 is addressed.
         '''
         IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
-        test = CBCMode(key, IV)
+        test = OFBMode(key, IV)
         preProcessedData = test.preProcess(
                 'This data should be split into a list with 16 byte'
                 ' elements. The element that is not 16 bytes gets sent'
@@ -122,14 +122,14 @@ class cbcTestCase(unittest.TestCase):
 
     def testPostProcess(self):
         '''
-        Testing the postProcess function in blocks/aesCBC.py with a large
+        Testing the postProcess function in blocks/aesOFB.py with a large
         ciphertext.
         Note: This test is repetitive and will be trimmed out once issue #9
-        is addressed.
+        is addressed. This would also be removed once issue #12 is addressed.
         '''
         IV = '\xb0\xc8\xbc\xa6\xf2Z\x85~\xe5\x9f\xa3m\x17C\xc9\x7f'
         key = '\x00' * 16
-        test = CBCMode(key, IV)
+        test = OFBMode(key, IV)
         postProcessData = test.postProcess(
                 'x\xf5\xf8\xa8-\x99\xd4\x84\xc2\x94\xd09\x16\xe5\t\x96\xde\xe0'
                 '\xb4o~\x17)\xb1\x86:\xef\xc4\xbc:n\xb0\xe0K1^\x1cPA\x89\xc2'

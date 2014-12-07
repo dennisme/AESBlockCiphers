@@ -40,15 +40,15 @@ class CBCMode(object):
 
     @iv.setter
     def iv(self, iv):
-        if (len(iv) != 16):
-            raise Exception('Initialization vector (IV) must be 16 bytes.')
+        if (len(iv) not in [16, 24, 32]):
+            raise Exception('The iv must be 16, 24, or 32 bytes long.')
         self._iv = iv
 
     def pad(self, data):
         '''
         This constructor takes in the string that needs to be padded.
         Calls the custom pad class in the block/padding.py and returns the
-        pdded string.
+        padded string.
         '''
         padding = padData(data)
         paddedData = padding.padString()
@@ -134,9 +134,9 @@ class CBCMode(object):
 
     def decrypt(self, ciphertext):
         '''
-        This decrypt constructor takes the plantext string, sends it to the
+        This decrypt constructor takes the ciphertext string, sends it to the
         postProcess class to be chunked. The blocks are sent to the python
-        cryptography ECB mode for decryption. The first block is tehn xored
+        cryptography ECB mode for decryption. The first block is then xored
         with the IV. The remaining blocks are xored with the previous
         ciphertext in the list. The last element in the plaintextList is
         then unpadded.
