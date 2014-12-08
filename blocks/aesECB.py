@@ -128,14 +128,9 @@ class ECBMode(object):
 
         # Loop through decrypt the ciphertext and then unpad.
         plaintextList = []
-        if (len(ciphertext) == 1):
-            plaintext = decryptor.update(ciphertext[0])
-            unPaddedPt = self.unPad(plaintext)
-            return unPaddedPt
-        else:
-            for i in range(0, len(ciphertext)):
-                plaintext = decryptor.update(ciphertext[i])
-                plaintextList.append(plaintext)
-            paddedElement = self.unPad(plaintextList.pop(-1))
-            plaintextList.append(paddedElement)
-            return ''.join(plaintextList)
+        for i in range(0, len(ciphertext)):
+            plaintext = decryptor.update(ciphertext[i])
+            plaintextList.append(plaintext)
+        paddedElement = self.unPad(plaintextList.pop(-1))
+        plaintextList.append(paddedElement)
+        return ''.join(plaintextList)
