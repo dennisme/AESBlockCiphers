@@ -13,19 +13,19 @@ the code for the specific block operation. Educational purposes only.
 
 Note: setup.py coming soon.
 
-'''bash
-pip install -r requiremnts.txt
-'''
+```bash
+pip install -r requirements.txt
+```
 
 ###Testing
 
-'''python
+```python
 nosetest test/test_ecb.py
-'''
+```
 
-'''python 
+```python 
 nosetests -vv test/test_*
-'''
+```
 
 ###Directory Info:
 
