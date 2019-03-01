@@ -11,7 +11,7 @@ Personal project using python cryptography to implement ECB, CBC, CFB, OFB
 and CTR in AES. The base encryption in all the files ECB. I have written 
 the code for the specific block operation. Educational purposes only. 
 
-###Installation:
+### Installation:
 
 Note: setup.py coming soon.
 
@@ -19,7 +19,7 @@ Note: setup.py coming soon.
 pip install -r requirements.txt
 ```
 
-###Testing
+### Testing
 
 ```python
 nosetest test/test_ecb.py
@@ -29,7 +29,7 @@ nosetest test/test_ecb.py
 nosetests -vv test/test_*
 ```
 
-###Directory Info:
+### Directory Info:
 
 - blocks - contains block cipher and common modules. 
 - test - contains test code for the working modules in block/ 
@@ -37,7 +37,7 @@ nosetests -vv test/test_*
 - LICENSE.md - licensing purposes 
 - README.md - used for readme on github
 
-###TODO list:
+### TODO list:
 
 - Write basic template files for using the library
 - Run tests on functions for timing
